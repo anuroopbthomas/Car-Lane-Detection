@@ -1,56 +1,58 @@
-# **Finding Lane Lines on the Road** 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
+# **Finding Lane Lines on the Road**
 
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
+## Anuroop Thomas's Submission
 
-Overview
 ---
 
-When we drive, we use our eyes to decide where to go.  The lines on the road that show us where the lanes are act as our constant reference for where to steer the vehicle.  Naturally, one of the first things we would like to do in developing a self-driving car is to automatically detect lane lines using an algorithm.
+**Finding Lane Lines on the Road**
 
-In this project you will detect lane lines in images using Python and OpenCV.  OpenCV means "Open-Source Computer Vision", which is a package that has many useful tools for analyzing images.  
-
-To complete the project, two files will be submitted: a file containing project code and a file containing a brief write up explaining your solution. We have included template files to be used both for the [code](https://github.com/udacity/CarND-LaneLines-P1/blob/master/P1.ipynb) and the [writeup](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md).The code file is called P1.ipynb and the writeup template is writeup_template.md 
-
-To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
+The goals / steps of this project are the following:
+* Make a pipeline that finds lane lines on the road
+* Reflect on your work in a written report
 
 
-Creating a Great Writeup
----
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
+[//]: # (Image References)
 
-1. Describe the pipeline
+[image1]: ./test_images_output/lines-solidWhiteCurve.jpg "Final"
+[image2]: ./test_images/lines-solidWhiteCurve "Original"
 
-2. Identify any shortcomings
-
-3. Suggest possible improvements
-
-We encourage using images in your writeup to demonstrate how your pipeline works.  
-
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
-
-
-The Project
 ---
 
-## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
+### Reflection
 
-**Step 1:** Set up the [CarND Term1 Starter Kit](https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/83ec35ee-1e02-48a5-bdb7-d244bd47c2dc/lessons/8c82408b-a217-4d09-b81d-1bda4c6380ef/concepts/4f1870e0-3849-43e4-b670-12e6f2d4b7a7) if you haven't already.
+### 1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
 
-**Step 2:** Open the code in a Jupyter Notebook
+My pipeline consisted of several steps that essentially gave the image the corrected vision of the proper image.
 
-You will complete the project code in a Jupyter notebook.  If you are unfamiliar with Jupyter Notebooks, check out <A HREF="https://www.packtpub.com/books/content/basics-jupyter-notebook-and-python" target="_blank">Cyrille Rossant's Basics of Jupyter Notebook and Python</A> to get started.
+This is the original image that I will be using.
+![alt text][image2]
 
-Jupyter is an Ipython notebook where you can run blocks of code and see results interactively.  All the code for this project is contained in a Jupyter notebook. To start Jupyter in your browser, use terminal to navigate to your project directory and then run the following command at the terminal prompt (be sure you've activated your Python 3 carnd-term1 environment as described in the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) installation instructions!):
+These steps were all contained within the process_image function which took the image as input. The first step in this was making the picture grayscale by putting it in the grayscale function. The next step was to get a gaussian blur with a kernel size of 5. Next, I got the edges of the highlighted lines. by using canny with a low threshold of 50 and a high threshold of 150. Next, I defined a shape as the object imshape.
 
-`> jupyter notebook`
+In the next section of my code in the function, I defined the vertices of the region of interest quadrilateral and applied this region to the image.
 
-A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+Then in the next section, I called my hough lines function which I added a lot of features to. Specifically what happens in the hough_lines function is that it takes in the image, the rho, theta, threshold, the minimum line length, and maximum line length (If you'd like to learn more about hough lines since they are a somewhat complex concept use this link https://docs.opencv.org/2.4/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html). It creates two objects, one is lines which uses cv2.HoughLinesP to create some valid lines for the image. The second object line_img returns an array all with zeros in it to get ready to fill in which values should be lines.
 
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
+The function draw_lines is called and I also added a lot to this function. Essentially, a basic summary of this code is that it takes averages of points and determines slopes and outputs these lines in red onto the image.
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+Back to the process_image function, the final result is given from the function, weighted_image which basically is the final output with all lines drawn and such drawn on the image.
 
+Then outside of the pipeline it runs through all of the files in test_images and creates images in the existing directory test_images_output with all lines drawn on.
+
+This is the final product.
+
+![alt text][image1]
+
+
+### 2. Identify potential shortcomings with your current pipeline
+
+Within the pipeline there are actually some major shortcomings.
+
+The pipeline does not work on the challenge video because it requires a straight line and the curved lane in the image doesn't work as that probably would have to graphed as some sort of exponential function.
+
+Another issue is that sometimes some specific line markings are not picked up in blue which was also what my program did, so this is an issue.
+
+
+### 3. Suggest possible improvements to your pipeline
+
+A possible improvement to this pipeline would be incorporating exponential lines to make a curved lane. And of course having a better detection of lane markings would hopefully improve the image a lot better.
